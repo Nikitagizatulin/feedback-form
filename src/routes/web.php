@@ -15,7 +15,7 @@ Auth::routes();
 
 Route::get('/', function () {
      if (auth()->check()) {
-        if (Auth::user()->user_role == 'client') {
+         if (Auth::user()->user_role == 'client') {
             return redirect('/fb');
         }
         if(Auth::user()->user_role == 'manager'){
@@ -25,5 +25,7 @@ Route::get('/', function () {
     return redirect()->to('login');
 });
 Route::get('/fb', 'HomeController@feedback')->middleware('can:client');
+Route::post('/fb','HomeController@fb');
 Route::get('/fbAll','HomeController@feedbackAll')->middleware('can:manager');
+Route::get('/download','HomeController@download')->middleware('can:manager');
 

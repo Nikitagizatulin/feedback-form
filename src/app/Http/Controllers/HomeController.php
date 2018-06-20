@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Bid;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreBid;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -26,8 +30,33 @@ class HomeController extends Controller
         return view('feedback.feedback');
     }
 
+    public function fb(StoreBid $request)
+    {
+        $path = $request->file('file')->store('user-files');
+        Bid::create([
+            'theme'=>$request->theme,
+            'message'=>$request->message,
+            'file'=>$path,
+            'user_id'=>Auth::user()->id
+        ]);
+       return back();
+    }
+
+    public function download(Request $request)
+    {
+        $path = storage_path('app/' . urldecode($request->file));
+        return response()->download($path);
+    }
+
     public function feedbackAll()
     {
-       return view('feedback.feedback_all');
+        $countPaginate = 10;
+        $data = DB::table('bids')
+            ->select(DB::raw('bids.*,users.name,users.email'))
+            ->join('users','users.id','=','bids.user_id')
+            ->orderBy('id','desc')
+            ->paginate($countPaginate);
+            $count = ($data->currentPage() * $countPaginate + 1)-$countPaginate;
+        return view('feedback.feedback_all',compact('data','count'));
     }
 }
