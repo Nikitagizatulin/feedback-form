@@ -28,4 +28,5 @@ Route::get('/fb', 'HomeController@feedback')->middleware('can:client');
 Route::post('/fb','HomeController@fb');
 Route::get('/fbAll','HomeController@feedbackAll')->middleware('can:manager');
 Route::get('/download','HomeController@download')->middleware('can:manager');
+Route::post('/readed','HomeController@readed')->middleware('can:manager');
 

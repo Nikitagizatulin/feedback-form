@@ -34,12 +34,12 @@ class HomeController extends Controller
     {
         $path = $request->file('file')->store('user-files');
         Bid::create([
-            'theme'=>$request->theme,
-            'message'=>$request->message,
-            'file'=>$path,
-            'user_id'=>Auth::user()->id
+            'theme'   => $request->theme,
+            'message' => $request->message,
+            'file'    => $path,
+            'user_id' => Auth::user()->id
         ]);
-       return back();
+        return back()->with('success', 'Your application is registered');
     }
 
     public function download(Request $request)
@@ -51,12 +51,23 @@ class HomeController extends Controller
     public function feedbackAll()
     {
         $countPaginate = 10;
-        $data = DB::table('bids')
-            ->select(DB::raw('bids.*,users.name,users.email'))
-            ->join('users','users.id','=','bids.user_id')
-            ->orderBy('id','desc')
-            ->paginate($countPaginate);
-            $count = ($data->currentPage() * $countPaginate + 1)-$countPaginate;
-        return view('feedback.feedback_all',compact('data','count'));
+        $data          = DB::table('bids')->select(DB::raw('bids.*,users.name,users.email'))->join('users', 'users.id',
+                '=', 'bids.user_id')->orderBy('id', 'desc')->paginate($countPaginate);
+        $count         = ($data->currentPage() * $countPaginate + 1) - $countPaginate;
+        return view('feedback.feedback_all', compact('data', 'count'));
+    }
+
+    public function readed(Request $request)
+    {
+    $bid = Bid::findOrFail($request->id);
+    $newData = $bid->readed == '0'?'1':'0';
+    $bid->readed = $newData;
+    if($bid->save())
+    {
+        return response()->json(['success'=>'data changed']);
+    }
+    else{
+        return abort(500, 'Something went wrong');
+    }
     }
 }

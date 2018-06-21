@@ -4,6 +4,7 @@
 
 
 @section('content')
+    <div id="preloader"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="box box-primary">
@@ -21,6 +22,7 @@
                             <th>User mail</th>
                             <th>File</th>
                             <th>Time to create</th>
+                            <th>Delivered</th>
                         </tr>
                         @foreach($data as $dib)
                             <tr>
@@ -33,6 +35,12 @@
                                     <a href="{{url('/download?file=' . urlencode($dib->file))}}"><i class="fa fa-download" aria-hidden="true"></i> Download user file</a>
                                 </td>
                                 <td>{{$dib->created_at}}</td>
+                                <td>
+                                    <label class="contain">
+                                        <input name="read" data-id="{{$dib->id}}" type="checkbox" {{$dib->readed == '1'?'checked':''}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
                             </tr>
                         @endforeach
                     </table>
@@ -46,4 +54,11 @@
         </div>
     </div>
 
+@stop
+@section('css')
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@stop
+@section('js')
+    <script src="{{asset('js/script.js')}}"></script>
 @stop
