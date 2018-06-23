@@ -24,6 +24,13 @@
                         {{ session()->get('error') }}
                     </div>
                 @endif
+                @if(!empty($difTime))
+                    <div class="timerBlock">
+                        <p class="h1 text-danger text-center">
+                            Time before the opportunity to send an application</p>
+                        <div id="timer" data-timer="{{$difTime}}"></div>
+                    </div>
+                @endif
                 <form role="form" method="POST" action="{{url('/fb')}}" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
@@ -58,10 +65,17 @@
                     </div>
 
                     <div class="box-footer">
-                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <input type="submit" class="btn btn-primary" value="Submit" {{empty($difTime)?'':'disabled'}}>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+@stop
+@section('css')
+    <link rel="stylesheet" href="{{asset('css/TimeCircles.css')}}">
+@stop
+@section('js')
+    <script src="{{asset('js/TimeCircles.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
 @stop
