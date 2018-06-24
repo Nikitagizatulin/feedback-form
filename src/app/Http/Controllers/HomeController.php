@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Model\Bid;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Mail\UserApplication;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -53,19 +56,25 @@ class HomeController extends Controller
 
     public function fb(StoreBid $request)
     {
-        $timeToNewBid = $this->checkLastBid();
-        if ( ! empty($timeToNewBid)) {
-            $time = Carbon::now()->addSeconds($timeToNewBid)->diffForHumans();;
-            return back()->with('error',
-                'It is allowed to send one application per day. Before the opportunity to send an application ' . $time);
-        }
+//        $timeToNewBid = $this->checkLastBid();
+//        if ( ! empty($timeToNewBid)) {
+//            $time = Carbon::now()->addSeconds($timeToNewBid)->diffForHumans();;
+//            return back()->with('error',
+//                'It is allowed to send one application per day. Before the opportunity to send an application ' . $time);
+//        }
         $path = $request->file('file')->store('user-files');
-        Bid::create([
+        $userId = Auth::user()->id;
+
+        $lastId =  Bid::create([
             'theme'   => $request->theme,
             'message' => $request->message,
             'file'    => $path,
-            'user_id' => Auth::user()->id
+            'user_id' => $userId
         ]);
+
+        $mailManager = User::where('user_role', 'manager')->first();
+        Mail::to($mailManager->email)->send(new UserApplication([$request, $path, $userId,$lastId->id]));
+
         return back()->with('success', 'Your application is registered');
     }
 
