@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{$count++}}</td>
                                 <td>{{$dib->theme}}</td>
-                                <td>{{$dib->message}}</td>
+                                <td>{!! strlen($dib->message)>200?substr($dib->message,0,200) . ' <a href="#" class="readMore" data-id="' . $dib->id . '">read more...</a>':$dib->message !!}</td>
                                 <td>{{$dib->name}}</td>
                                 <td><a href="mailto:{{$dib->email }}">{{$dib->email}}</a></td>
                                 <td>
@@ -53,7 +53,25 @@
             <!-- /.box -->
         </div>
     </div>
-
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal Heading</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Modal body..
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 @section('css')
     <link rel="stylesheet" href="{{asset('css/style.css')}}">

@@ -7,10 +7,10 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBid;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{
+    DB, Mail, Auth
+};
 use App\Mail\UserApplication;
-use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -56,24 +56,30 @@ class HomeController extends Controller
 
     public function fb(StoreBid $request)
     {
-//        $timeToNewBid = $this->checkLastBid();
-//        if ( ! empty($timeToNewBid)) {
-//            $time = Carbon::now()->addSeconds($timeToNewBid)->diffForHumans();;
-//            return back()->with('error',
-//                'It is allowed to send one application per day. Before the opportunity to send an application ' . $time);
-//        }
-        $path = $request->file('file')->store('user-files');
+        $timeToNewBid = $this->checkLastBid();
+        if ( ! empty($timeToNewBid)) {
+            $time = Carbon::now()->addSeconds($timeToNewBid)->diffForHumans();;
+            return back()->with('error',
+                'It is allowed to send one application per day. Before the opportunity to send an application ' . $time);
+        }
+        $path   = $request->file('file')->store('user-files');
         $userId = Auth::user()->id;
 
-        $lastId =  Bid::create([
+        $lastId      = Bid::create([
             'theme'   => $request->theme,
             'message' => $request->message,
             'file'    => $path,
             'user_id' => $userId
         ]);
-
+        $lastId      = $lastId->id;
         $mailManager = User::where('user_role', 'manager')->first();
-        Mail::to($mailManager->email)->send(new UserApplication([$request, $path, $userId,$lastId->id]));
+        Mail::to($mailManager->email)->queue(new UserApplication([
+            'theme'    => $request->theme,
+            'message'  => $request->message,
+            'pathFile' => $path,
+            'userId'   => $userId,
+            'lastId'   => $lastId
+        ]));
 
         return back()->with('success', 'Your application is registered');
     }
@@ -103,5 +109,11 @@ class HomeController extends Controller
         } else {
             return abort(500, 'Something went wrong');
         }
+    }
+
+    public function readmore(Request $request)
+    {
+        $bid = Bid::findOrFail($request->id);
+        return $bid->toJson();
     }
 }

@@ -20,7 +20,7 @@ class CreateBidsTable extends Migration
             $table->string('file', 200);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->enum('readed', ['0', '1'])->default('0');
+            $table->enum('readed', ['0', '1'])->default('0')->nullable();
             $table->timestamps();
         });
     }

@@ -30,10 +30,10 @@ class UserApplication extends Mailable
     {
         return $this->markdown('mail.shipped')
             ->with([
-            'userId' => $this->data[2],
-            'themeBid' => $this->data[0]->theme,
-            'messageBid' => $this->data[0]->message,
-            'numberOfBid'=> $this->data[3]
-        ])->attach(storage_path('app/' . $this->data[1]));
+            'userId' => $this->data['userId'],
+            'themeBid' => $this->data['theme'],
+            'messageBid' => $this->data['message'],
+            'numberOfBid'=> $this->data['lastId']
+        ])->attach(storage_path('app/' . $this->data['pathFile']));
     }
 }

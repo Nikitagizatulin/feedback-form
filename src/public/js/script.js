@@ -40,5 +40,35 @@
                 }
             });
         }
+
+        if ($('.readMore').length > 0) {
+            $(".readMore").click(function (e) {
+                e.preventDefault();
+                $('#preloader').fadeIn('slow');
+                var id = $(this).attr('data-id');
+                var csrf = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    async  : false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrf
+                    },
+                    method : 'POST',
+                    url    : '/readmore',
+                    data   : {
+                        id: id
+                    },
+                    success: $.proxy(function (data) {
+                        var objData = $.parseJSON(data);
+                        $('#myModal').find('h4.modal-title').text(objData.theme);
+                        $('#myModal').find('div.modal-body').text(objData.message);
+                        $('#preloader').fadeOut('slow');
+                        $('#myModal').modal("show");
+                    }, $(this)),
+                    error  : function (data) {
+                        console.log(data);
+                    }
+                });
+            })
+        }
     })
 })(jQuery);
