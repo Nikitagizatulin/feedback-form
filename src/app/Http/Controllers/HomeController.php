@@ -25,12 +25,16 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Checking last application of user. If he isset and time less 24
+     * - return integer time in milliseconds
+     * after which you can send an application
      *
-     * @return \Illuminate\Http\Response
+     * @access private
+     * @return int
      */
     private function checkLastBid()
     {
+
         $uid     = Auth::user()->id;
         $lastBid = Bid::where('user_id', $uid)->orderBy('id', 'desc')->first();
         if ( ! $lastBid) {
@@ -47,8 +51,14 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * This method return view with time in millisecond
+     */
     public function feedback()
     {
+        /**
+         * @var int time in millisecond
+         */
         $difTime = $this->checkLastBid();
 
         return view('feedback.feedback', compact('difTime'));
@@ -92,6 +102,9 @@ class HomeController extends Controller
 
     public function feedbackAll()
     {
+        /**
+         * @var int Count of pagination item in the page
+         */
         $countPaginate = 10;
         $data          = DB::table('bids')->select(DB::raw('bids.*,users.name,users.email'))->join('users', 'users.id',
             '=', 'bids.user_id')->orderBy('id', 'desc')->paginate($countPaginate);
