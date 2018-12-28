@@ -16,4 +16,13 @@ php artisan key:generate
 
 # create all table fro project
 php artisan migrate
+
+# run this code for create the symbolic link. *require
+php artisan storage:link
+
+#if you want get fake data run this
+php artisan db:seed
+
+# now run the project 
+php artisan serve
 ```

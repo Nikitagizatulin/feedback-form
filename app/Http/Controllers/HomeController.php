@@ -72,7 +72,7 @@ class HomeController extends Controller
             return back()->with('error',
                 'It is allowed to send one application per day. Before the opportunity to send an application ' . $time);
         }
-        $path   = $request->file('file')->store('user-files');
+        $path   = $request->file('file')->store('public/images');
         $userId = Auth::user()->id;
 
         $lastId      = Bid::create([
@@ -96,7 +96,7 @@ class HomeController extends Controller
 
     public function download(Request $request)
     {
-        $path = storage_path('app/' . urldecode($request->file));
+        $path = storage_path("app/public/images/{urldecode($request->file)}");
         return response()->download($path);
     }
 
