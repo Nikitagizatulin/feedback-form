@@ -24,6 +24,7 @@ Route::get('/', function () {
     }
     return redirect()->to('login');
 });
+
 Route::get('/fb', 'HomeController@feedback')->middleware('can:client');
 Route::post('/fb','HomeController@fb');
 Route::get('/fbAll','HomeController@feedbackAll')->middleware('can:manager');

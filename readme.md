@@ -25,4 +25,13 @@ php artisan db:seed
 
 # now run the project 
 php artisan serve
+
+# and parallel start to laravel queue
+php artisan queue:work --tries=3
 ```
+## Functionality:
+* registration \ login user (validated)
+* create feedback form (validated) with some require file
+* after the feedback form is created - the ability to send a new form is not possible within 24 hours.
+* information about all of created feedback forms sent to admin in gmail. Each time when feedback form is created.
+* admin can see all feedback form on such url: your_domain_name/fbAll

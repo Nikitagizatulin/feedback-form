@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
         $numberData = 100;
-        // factory(App\User::class, 1000)->create();
         factory(App\User::class, $numberData)->create();
         $idUser = App\User::all()->last()->id;
         $faker = Faker\Factory::create();
@@ -37,6 +36,3 @@ class DatabaseSeeder extends Seeder
         }
     }
 }
-// premission developer:www-data
-// public more premission
-// Storage use
