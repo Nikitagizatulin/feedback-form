@@ -2,7 +2,7 @@
 
 > A Laravel 5.6 project with (adminlte template)
 
-![](https://github.com/Nikitagizatulin/tab-tracker/blob/ssr/project-photo.png)
+![](https://github.com/Nikitagizatulin/feedback-form/blob/master/project-photo.png)
 
 ## Build Setup
 
