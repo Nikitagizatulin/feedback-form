@@ -44,18 +44,8 @@ class HomeController extends Controller
         $time = $lastBid->created_at;
         $time = Carbon::parse($time);
         $now = Carbon::now();
-        $dif = $now->diffInSeconds($time);
+        $dif = $now->diffInRealSeconds($time);
         $twentyFourHours = 86400;
-        dd([$time, $now , $dif]);
-//        array:3 [▼
-//  0 => Carbon @1546693752 {#221 ▼
-//        date: 2019-01-05 15:09:12.0 Europe/Kiev (+02:00)
-//  }
-//  1 => Carbon @1546693752 {#228 ▼
-//        date: 2019-01-05 15:09:12.041487 Europe/Kiev (+02:00)
-//  }
-//  2 => 86399
-//]
 
         if ($dif >= $twentyFourHours) {
             return 0;
